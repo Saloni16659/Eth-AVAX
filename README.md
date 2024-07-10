@@ -1,22 +1,103 @@
-# Types of Functions - ETH + AVAX
-A smart contract to create your own ERC20 token and deploy it using HardHat or Remix
+# Create-and-mint-tokens
+# Description
+This Solidity code provides a comprehensive implementation of the ERC20 token standard. In this code we have public view functions, Token transfer functions, Allowance functions, and Internal Functions. 
+# Getting started
+# Installing
+We need to import the following:
+import "IREC20.sol";
+import "context.sol";
+We can run the code on Online Etherium IDE i.e. Remix IDE. Firstly open Remix IDE. Create a new Solidity file. Write the code and then compile the contract. After that Deploy the contract using the Deploy & Run Transactions tab.
+# Executing program
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.18;
 
-## DESCRIPTION
-Written in Solidity, a programming language used to create smart contracts on the Ethereum blockchain, this program is a straightforward contract. The following are the functions of the contract:
-1. the contract owner can mint tokens to a provided address and 
-2. any user should be able to burn and transfer tokens.
+import "IREC20.sol";
+import "context.sol";
 
-### Executing program
+contract ERC20 is Context, IERC20 {
+    mapping (address => uint256) private _balances;
 
-To run this program, you can use Remix, an online Solidity IDE. To get started, go to the Remix website at https://remix.ethereum.org/.
+    mapping (address => mapping (address => uint256)) private _allowances;
 
-Once you are on the Remix website, create a new file by clicking on the "+" icon in the left-hand sidebar. Save the file with a .sol extension (e.g., HelloWorld.sol). Copy and paste the code from contract.sol file into your file:
+    uint256 private _totalSupply;
 
-To compile the code, click on the "Solidity Compiler" tab in the left-hand sidebar. Make sure the "Compiler" option is set to latest solidity version (or another compatible version), and then click on the "Compile" button.
+    string private _name;
+    string private _symbol;
 
-Once the code is compiled, you can deploy the contract by clicking on the "Deploy & Run Transactions" tab in the left-hand sidebar. Select the your contract from the dropdown menu, and then click on the "Deploy" button.
+    constructor (string memory name_, string memory symbol_) {
+        name = name;
+        symbol = symbol;
+    }
 
-Once the contract is deployed, you can interact with it by calling the requireInstance, assertInstance and revertInstance function.
+    /**
+     * Returns the name of the token.
+     */
+    function name() public view virtual returns (string memory) {
+        return _name;
+    }
+
+    /**
+     * Returns the symbol of the token, usually a shorter version of the
+     * name.
+     */
+    function symbol() public view virtual returns (string memory) {
+        return _symbol;
+    }
+
+    /**
+     * Returns the number of decimals used to get its user representation.
+     * For example, if decimals equals 2, a balance of 505 tokens should
+     * be displayed to a user as 5,05 (505 / 10 ** 2).
+     *
+     * Tokens usually opt for a value of 18, imitating the relationship between
+     * Ether and Wei. This is the value {ERC20} uses, unless this function is
+     * overloaded;
+     *
+     * NOTE: This information is only used for display purposes: it in
+     * no way affects any of the arithmetic of the contract, including
+     * {IERC20-balanceOf} and {IERC20-transfer}.
+     */
+    function decimals() public view virtual returns (uint8) {
+        return 18;
+    }
+
+    /**
+     * See {IERC20-totalSupply}.
+     */
+    function totalSupply() public view virtual override returns (uint256) {
+        return _totalSupply;
+    }
+
+    /**
+     * See {IERC20-balanceOf}.
+     */
+    function balanceOf(address account) public view virtual override returns (uint256) {
+        return _balances[account];
+    }
+
+    /**
+     * See {IERC20-transfer}.
+     *
+     * Requirements:
+     *
+     * - recipient cannot be the zero address.
+     * - the caller must have a balance of at least amount.
+     */
+    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
+        _transfer(_msgSender(), recipient, amount);
+        return true;
+    }
+
+    /**
+     *  See {IERC20-allowance}.
+     */
+    function allowance(address owner, address spender) public view virtual override returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+    /**
+     * See {IERC20-approve}.
+     *
 
 ## Authors
 Saloni Gupta
